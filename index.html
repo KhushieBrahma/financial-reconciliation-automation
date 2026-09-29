@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Financial Reconciliation & Variance Automation</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f7fa;--card:#fff;--tx:#1a2233;--mut:#5d6778;--bd:#dfe3ea;--ac:#1f3a5f;--ok:#1e8a5a;--wa:#b7791f;--er:#c0392b;--in:#2b6cb0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141c;--card:#181e29;--tx:#e6eaf2;--mut:#98a2b5;--bd:#2a3344;--ac:#7fa6dc;--ok:#4cc38a;--wa:#e0a84a;--er:#ef7b6e;--in:#6ea8e8}}
+:root[data-theme="dark"]{--bg:#10141c;--card:#181e29;--tx:#e6eaf2;--mut:#98a2b5;--bd:#2a3344;--ac:#7fa6dc;--ok:#4cc38a;--wa:#e0a84a;--er:#ef7b6e;--in:#6ea8e8}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1000px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.6rem;margin:0 0 4px;color:var(--ac)}h2{font-size:1.05rem;margin:0 0 10px}
+.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.ctrl{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
+label{font-size:.8rem;color:var(--mut);display:block;margin-bottom:3px}
+input,select,button{font:inherit;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx)}
+button{background:var(--ac);color:var(--bg);border-color:var(--ac);cursor:pointer;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.k{border:1px solid var(--bd);border-radius:8px;padding:10px}.k b{display:block;font-size:1.35rem}.k span{font-size:.78rem;color:var(--mut)}
+.bar{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:.85rem}
+.bar i{display:block;height:14px;border-radius:3px;background:var(--ac)}.bar em{font-style:normal;width:150px;flex:none}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:640px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--bd)}th{color:var(--mut);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.t{padding:2px 8px;border-radius:99px;font-size:.72rem;font-weight:600;border:1px solid currentColor;white-space:nowrap}
+.High{color:var(--er)}.Medium{color:var(--wa)}.Low{color:var(--ok)}.Amount{color:var(--wa)}.MissingGL{color:var(--er)}.MissingBank{color:var(--in)}.Duplicate{color:var(--er)}
+ol{margin:0;padding-left:20px;color:var(--mut)}li{margin:3px 0}
+small{color:var(--mut)}
+</style></head><body><div class="w">
+<h1>Financial Reconciliation &amp; Variance Automation</h1>
+<p class="sub">Matches a General Ledger extract against a bank/source feed, flags breaks, quantifies variance and suggests likely causes. Uses synthetic data; all logic runs in your browser.</p>
+
+<div class="card"><h2>Controls</h2><div class="ctrl">
+<div><label>Transactions</label><select id="n"><option>200</option><option selected>500</option><option>1000</option></select></div>
+<div><label>Amount tolerance (₹)</label><input id="tol" type="number" value="1" min="0" step="0.5" style="width:90px"></div>
+<div><label>Random seed</label><input id="seed" type="number" value="42" style="width:90px"></div>
+<div><label>High-severity threshold (₹)</label><input id="mat" type="number" value="10000" min="0" style="width:110px"></div>
+<button id="run">Generate &amp; reconcile</button></div>
+<div class="ctrl" style="margin-top:14px"><div><label>Upload GL CSV (ref,date,account,amount)</label><input id="fg" type="file" accept=".csv"></div>
+<div><label>Upload bank CSV (same columns)</label><input id="fb" type="file" accept=".csv"></div>
+<small id="src">Using synthetic data.</small></div></div>
+
+<div class="card"><h2>Reconciliation summary</h2><div class="kpis" id="kpi"></div></div>
+<div class="card"><h2>Variance by break type</h2><div id="bars"></div></div>
+
+<div class="card"><h2>Variance by account</h2><div class="tw"><table style="min-width:420px"><thead><tr><th>Account</th><th class="n">Breaks</th><th class="n">Net variance (₹)</th><th class="n">Gross variance (₹)</th></tr></thead><tbody id="ac"></tbody></table></div></div>
+<div class="card"><h2>Exception report</h2>
+<div class="ctrl" style="margin-bottom:10px"><div><label>Filter</label><select id="f"><option value="">All breaks</option><option>Amount</option><option>MissingGL</option><option>MissingBank</option><option>Duplicate</option></select></div><div><label>Severity</label><select id="sv"><option value="">All</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+<button id="cp">Copy as CSV</button><small id="cnt"></small></div>
+<div class="tw"><table><thead><tr><th>Ref</th><th>Date</th><th>Account</th><th class="n">GL (₹)</th><th class="n">Bank (₹)</th><th class="n">Variance (₹)</th><th>Break</th><th>Severity</th><th>Status</th><th>Suggested cause (rule-based)</th></tr></thead><tbody id="tb"></tbody></table></div></div>
+
+<div class="card"><h2>How it works</h2><ol>
+<li>Generate synthetic GL and bank datasets with injected errors (seeded, so results are repeatable).</li>
+<li>Match records on reference ID; compare amounts against the tolerance.</li>
+<li>Classify breaks: amount mismatch, missing in GL, missing in bank, duplicate posting.</li>
+<li>Rank exceptions by absolute variance and attach a rule-based likely cause for reviewer triage.</li></ol>
+<p><small>Every flag needs human review. Stack: JavaScript here; the same logic maps to Python (pandas) and SQL joins. Replace the generator with real extracts to use it on live data.</small></p></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=x=>x.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+const ACC=["Cash & Bank","Receivables","Payables","Trading Revenue","Fees & Commissions","FX Revaluation"];
+let rows=[],custom={gl:null,bk:null},status={};
+try{status=JSON.parse(localStorage.getItem("recon_status")||"{}")}catch(e){}
+const ST=["Open","Under review","Resolved","Write-off"];
+function parse(t){const L=t.trim().split(/\r?\n/);const h=L.shift().toLowerCase().split(",").map(x=>x.trim());
+ const ix=k=>h.indexOf(k);return L.map(l=>{const c=l.split(",");return{ref:(c[ix("ref")]||"").trim(),d:(c[ix("date")]||"").trim(),acc:(c[ix("account")]||"Unassigned").trim(),amt:parseFloat(c[ix("amount")])}}).filter(x=>x.ref&&!isNaN(x.amt))}
+function load(id,key){$(id).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{custom[key]=parse(r.result);if(custom.gl&&custom.bk)run();else $("src").textContent="Loaded "+key.toUpperCase()+" ("+custom[key].length+" rows). Upload the other file."};r.readAsText(f)}}
+const sev=(v,m)=>Math.abs(v)>=m?"High":Math.abs(v)>=m/10?"Medium":"Low";
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function build(n,seed){
+ const r=rng(seed),gl=[],bk=[];
+ for(let i=1;i<=n;i++){
+  const ref="TXN"+String(i).padStart(5,"0"),amt=Math.round((r()*90000+500)*100)/100;
+  const d=new Date(2026,8,1+Math.floor(r()*28)).toISOString().slice(0,10),acc=ACC[Math.floor(r()*ACC.length)];
+  const g={ref,d,acc,amt},b={ref,d,acc,amt},x=r();
+  if(x<.05)b.amt=Math.round((amt+(r()<.5?-1:1)*(r()*(r()<.5?50:2000)+.5))*100)/100;   // amount diff
+  gl.push(g);
+  if(x>=.05&&x<.08){}                 // missing in bank
+  else bk.push(b);
+  if(x>=.08&&x<.10){bk.pop();gl.pop();bk.push(b);}   // missing in GL
+  if(x>=.10&&x<.12)gl.push({...g});   // duplicate in GL
+ }
+ return{gl,bk};
+}
+function cause(t,v,d){
+ if(t==="Amount")return Math.abs(v)<=100?"Small difference: likely rounding, FX or bank-charge netting":"Large difference: check keying error or partial settlement";
+ if(t==="MissingBank")return "Not on bank feed: likely timing/cut-off or unsettled item";
+ if(t==="MissingGL")return "On bank, not booked: likely unposted receipt or missing journal";
+ return "Posted twice in GL: likely duplicate upload or re-run of a batch";
+}
+function recon(gl,bk,tol){
+ const out=[],bm=new Map(bk.map(b=>[b.ref,b])),seen=new Set(),gm=new Set();
+ for(const g of gl){
+  if(seen.has(g.ref)){out.push({...g,gl:g.amt,bank:0,v:g.amt,t:"Duplicate"});continue}
+  seen.add(g.ref);const b=bm.get(g.ref);
+  if(!b){out.push({...g,gl:g.amt,bank:null,v:g.amt,t:"MissingBank"});continue}
+  const v=Math.round((g.amt-b.amt)*100)/100;
+  if(Math.abs(v)>tol)out.push({...g,gl:g.amt,bank:b.amt,v,t:"Amount"});
+ }
+ for(const b of bk)if(!seen.has(b.ref))out.push({...b,gl:null,bank:b.amt,v:-b.amt,t:"MissingGL"});
+ out.forEach(e=>{e.c=cause(e.t,e.v);e.s=sev(e.v,+$("mat").value||10000)});
+ return out.sort((a,b)=>Math.abs(b.v)-Math.abs(a.v));
+}
+function run(){
+ const useC=custom.gl&&custom.bk,{gl,bk}=useC?{gl:custom.gl,bk:custom.bk}:build(+$("n").value,+$("seed").value||1),n=new Set(gl.map(x=>x.ref)).size;
+ $("src").textContent=useC?"Using your uploaded files ("+gl.length+" GL, "+bk.length+" bank rows).":"Using synthetic data.";
+ rows=recon(gl,bk,+$("tol").value||0);
+ const br=new Set(rows.map(x=>x.ref)).size,tot=gl.reduce((s,x)=>s+x.amt,0),net=rows.reduce((s,x)=>s+x.v,0),abs=rows.reduce((s,x)=>s+Math.abs(x.v),0);
+ const rate=((n-br)/n*100).toFixed(1);
+ $("kpi").innerHTML=[["GL records",gl.length],["Bank records",bk.length],["Match rate",rate+"%"],["Breaks",rows.length],["Net variance ₹",fmt(net)],["Resolved",rows.filter(x=>["Resolved","Write-off"].includes(status[x.ref])).length+" / "+rows.length],["Gross variance ₹",fmt(abs)]]
+  .map(k=>`<div class="k"><b>${k[1]}</b><span>${k[0]}</span></div>`).join("");
+ const types=["Amount","MissingBank","MissingGL","Duplicate"],sums=types.map(t=>rows.filter(x=>x.t===t).reduce((s,x)=>s+Math.abs(x.v),0)),mx=Math.max(...sums,1);
+ $("bars").innerHTML=types.map((t,i)=>`<div class="bar"><em>${t} (${rows.filter(x=>x.t===t).length})</em><i style="width:${sums[i]/mx*55}%"></i><span>₹${fmt(sums[i])}</span></div>`).join("");
+ const am={};rows.forEach(x=>{const a=am[x.acc]=am[x.acc]||{n:0,net:0,g:0};a.n++;a.net+=x.v;a.g+=Math.abs(x.v)});
+ $("ac").innerHTML=Object.entries(am).sort((a,b)=>b[1].g-a[1].g).map(([k,a])=>`<tr><td>${k}</td><td class="n">${a.n}</td><td class="n">${fmt(a.net)}</td><td class="n">${fmt(a.g)}</td></tr>`).join("");
+ draw();
+}
+function draw(){
+ const f=$("f").value,sv=$("sv").value,list=rows.filter(x=>(!f||x.t===f)&&(!sv||x.s===sv));window.cur=list;
+ $("cnt").textContent=`Showing top ${Math.min(list.length,50)} of ${list.length}, ranked by absolute variance`;
+ $("tb").innerHTML=list.slice(0,50).map(x=>`<tr><td>${x.ref}</td><td>${x.d}</td><td>${x.acc}</td><td class="n">${x.gl==null?"–":fmt(x.gl)}</td><td class="n">${x.bank==null?"–":fmt(x.bank)}</td><td class="n">${fmt(x.v)}</td><td><span class="t ${x.t}">${x.t}</span></td><td><span class="t ${x.s}">${x.s}</span></td><td><select data-r="${x.ref}">${ST.map(o=>`<option${(status[x.ref]||"Open")===o?" selected":""}>${o}</option>`).join("")}</select></td><td>${x.c}</td></tr>`).join("")||`<tr><td colspan="10">No breaks.</td></tr>`;
+}
+$("tb").onchange=e=>{const r=e.target.dataset.r;if(!r)return;status[r]=e.target.value;try{localStorage.setItem("recon_status",JSON.stringify(status))}catch(x){}run()};
+$("cp").onclick=async()=>{const t="ref,date,account,gl,bank,variance,break,severity,status\n"+window.cur.map(x=>[x.ref,x.d,x.acc,x.gl??"",x.bank??"",x.v,x.t,x.s,status[x.ref]||"Open"].join(",")).join("\n");
+ try{await navigator.clipboard.writeText(t);$("cp").textContent="Copied!"}catch(e){window.prompt("Copy CSV:",t)}setTimeout(()=>$("cp").textContent="Copy as CSV",1500)};
+load("fg","gl");load("fb","bk");$("f").onchange=draw;$("sv").onchange=draw;$("run").onclick=()=>{custom={gl:null,bk:null};$("fg").value="";$("fb").value="";run()};run();
+</script></body></html>

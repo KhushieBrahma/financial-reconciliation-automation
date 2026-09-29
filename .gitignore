@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+exception_report.csv
+.DS_Store

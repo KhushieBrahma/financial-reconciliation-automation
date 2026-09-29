@@ -1,0 +1,57 @@
+ref,date,account,gl,bank,variance,break_type,severity,likely_cause,status
+TXN00296,2026-09-10,Trading Revenue,85663.54,,85663.54,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00197,2026-09-21,Trading Revenue,85468.07,,85468.07,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00085,2026-09-05,Payables,85003.7,,85003.7,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00486,2026-09-02,Cash & Bank,,83653.68,-83653.68,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00071,2026-09-17,Receivables,83244.84,,83244.84,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00089,2026-09-28,Cash & Bank,,81980.28,-81980.28,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00384,2026-09-11,FX Revaluation,,81421.42,-81421.42,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00061,2026-09-18,Cash & Bank,78021.42,,78021.42,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00320,2026-09-14,FX Revaluation,76756.87,,76756.87,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00040,2026-09-10,Receivables,75349.9,,75349.9,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00316,2026-09-17,Fees & Commissions,70521.53,,70521.53,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00474,2026-09-27,Fees & Commissions,69724.81,,69724.81,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00425,2026-09-17,Trading Revenue,65951.13,,65951.13,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00018,2026-09-22,FX Revaluation,63663.83,,63663.83,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00331,2026-09-16,Cash & Bank,,62313.89,-62313.89,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00491,2026-09-10,Trading Revenue,62149.18,,62149.18,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00389,2026-09-03,Payables,,58757.48,-58757.48,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00483,2026-09-20,Fees & Commissions,,56752.01,-56752.01,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00153,2026-09-22,Cash & Bank,,53770.35,-53770.35,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00377,2026-09-12,Fees & Commissions,53727.78,,53727.78,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00359,2026-09-22,Payables,50785.12,,50785.12,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00312,2026-09-26,Receivables,49119.39,,49119.39,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00072,2026-09-28,Receivables,46204.56,,46204.56,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00383,2026-09-02,Trading Revenue,45623.06,,45623.06,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00185,2026-09-26,Cash & Bank,,44673.92,-44673.92,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00333,2026-09-05,Fees & Commissions,34038.22,,34038.22,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00009,2026-09-03,Trading Revenue,,30793.51,-30793.51,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00143,2026-09-15,Trading Revenue,30279.33,,30279.33,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00349,2026-09-19,Fees & Commissions,,29694.46,-29694.46,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00452,2026-09-26,Cash & Bank,25209.98,,25209.98,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00161,2026-09-16,FX Revaluation,21969.04,,21969.04,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00049,2026-09-08,Cash & Bank,21210.33,,21210.33,MissingBank,High,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00096,2026-09-08,FX Revaluation,19406.89,,19406.89,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00305,2026-09-04,Trading Revenue,,17582.77,-17582.77,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00367,2026-09-17,FX Revaluation,15631.94,,15631.94,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00202,2026-09-19,Payables,,13927.78,-13927.78,MissingGL,High,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00190,2026-09-07,Payables,11359.03,,11359.03,Duplicate,High,Posted twice in GL: likely duplicate upload or re-run of a batch,Open
+TXN00253,2026-09-28,Trading Revenue,,9532.81,-9532.81,MissingGL,Medium,"On bank, not booked: likely unposted receipt or missing journal",Open
+TXN00201,2026-09-21,FX Revaluation,7167.4,,7167.4,MissingBank,Medium,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00069,2026-09-24,Fees & Commissions,5763.5,,5763.5,MissingBank,Medium,Not on bank feed: likely timing/cut-off or unsettled item,Open
+TXN00360,2026-09-02,Trading Revenue,78058.79,79783.08,-1724.29,Amount,Medium,Large difference: check keying error or partial settlement,Open
+TXN00090,2026-09-09,Cash & Bank,38621.82,39896.23,-1274.41,Amount,Medium,Large difference: check keying error or partial settlement,Open
+TXN00293,2026-09-08,Trading Revenue,10251.15,9128.12,1123.03,Amount,Medium,Large difference: check keying error or partial settlement,Open
+TXN00274,2026-09-23,Payables,27128.52,26336.61,791.91,Amount,Low,Large difference: check keying error or partial settlement,Open
+TXN00471,2026-09-08,Trading Revenue,71785.91,71047.77,738.14,Amount,Low,Large difference: check keying error or partial settlement,Open
+TXN00451,2026-09-12,Trading Revenue,62578.83,63284.27,-705.44,Amount,Low,Large difference: check keying error or partial settlement,Open
+TXN00434,2026-09-09,FX Revaluation,88793.55,88103.62,689.93,Amount,Low,Large difference: check keying error or partial settlement,Open
+TXN00084,2026-09-21,Fees & Commissions,89350.98,88751.87,599.11,Amount,Low,Large difference: check keying error or partial settlement,Open
+TXN00426,2026-09-10,Cash & Bank,26429.14,26468.94,-39.8,Amount,Low,"Small difference: likely rounding, FX or bank-charge netting",Open
+TXN00219,2026-09-20,Payables,66608.05,66574.17,33.88,Amount,Low,"Small difference: likely rounding, FX or bank-charge netting",Open
+TXN00259,2026-09-16,Fees & Commissions,80369.48,80401.22,-31.74,Amount,Low,"Small difference: likely rounding, FX or bank-charge netting",Open
+TXN00093,2026-09-05,Fees & Commissions,62691.77,62719.62,-27.85,Amount,Low,"Small difference: likely rounding, FX or bank-charge netting",Open
+TXN00127,2026-09-07,Receivables,20717.66,20693.64,24.02,Amount,Low,"Small difference: likely rounding, FX or bank-charge netting",Open
+TXN00350,2026-09-06,Fees & Commissions,5234.79,5257.22,-22.43,Amount,Low,"Small difference: likely rounding, FX or bank-charge netting",Open
+TXN00210,2026-09-16,Payables,62543.4,62557.89,-14.49,Amount,Low,"Small difference: likely rounding, FX or bank-charge netting",Open
+TXN00314,2026-09-19,Payables,71458.84,71465.61,-6.77,Amount,Low,"Small difference: likely rounding, FX or bank-charge netting",Open
