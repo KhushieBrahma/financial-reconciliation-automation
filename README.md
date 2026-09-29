@@ -2,7 +2,7 @@
 
 Automates ledger-to-bank reconciliation: matches records, flags breaks, quantifies variance, rates severity and suggests likely causes so a reviewer can triage exceptions quickly.
 
-**[Live demo](https://claude.ai/artifact/JmsN1UCbxGd6LFVQh1cN1U)** · Built by [Khushie Brahma](https://github.com/YOUR-USERNAME)
+**[Live demo](https://khushiebrahma.github.io/financial-reconciliation-automation/)** · Built by [Khushie Brahma](https://github.com/KhushieBrahma)
 
 > Uses synthetic data only. Every flagged exception needs human review.
 
@@ -58,6 +58,9 @@ Writes `exception_report.csv` with variance, break type, severity, likely cause 
 
 ## Tech
 JavaScript (web app), Python (CLI). The same logic maps to SQL (`FULL OUTER JOIN` on reference ID with an amount-difference filter).
+
+## Development approach
+Built as a portfolio project on reconciliation and financial controls. I used an AI assistant (Claude) for scaffolding and code generation, then reviewed, tested and adapted the logic myself. Matching rules, break types, tolerance and severity thresholds are documented above so the behaviour is transparent and auditable.
 
 ## Possible next steps
 - SQL version of the matching logic
